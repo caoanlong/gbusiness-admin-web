@@ -1,6 +1,6 @@
 <template>
-    <div class="main-content">
-        <h1>首页</h1>
+    <div class="activity-container">
+
     </div>
 </template>
 

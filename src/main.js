@@ -6,7 +6,7 @@ import 'normalize.css/normalize.css'
 
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import './assets/css/reset.css'
+import './assets/css/reset.styl'
 import './assets/css/sidebar.css'
 
 import App from './App'
@@ -19,6 +19,14 @@ import './assets/icons'
 Vue.config.productionTip = false
 
 Vue.use(Element)
+
+// global filters
+import * as filters from './filters'
+
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+	Vue.filter(key, filters[key])
+})
 
 /* eslint-disable no-new */
 new Vue({

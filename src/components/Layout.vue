@@ -33,5 +33,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+.top-bar
+    position fixed
+    top 0
+    right 0
+    z-index 99
+    left 180px
+.hideSidebar
+    margin-left 36px
+    .top-bar
+        left 36px
 </style>

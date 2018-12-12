@@ -1,0 +1,63 @@
+[
+    {
+        "menuId": 1,
+        "menuName": "首页",
+        "name": "home",
+        "path": "/",
+        "icon": "home",
+        "permission": {
+            "path": "home",
+            "name": "首页"
+        }
+    },{
+        "menuId": 2,
+        "menuName": "商家管理",
+        "name": "merchant",
+        "path": "/merchant",
+        "icon": "peoples",
+        "permission": {
+            "path": "merchant",
+            "name": "商家管理"
+        }
+    },{
+        "menuId": 3,
+        "menuName": "活动管理",
+        "name": "activity",
+        "path": "/activity",
+        "icon": "component",
+        "permission": {
+            "path": "activity",
+            "name": "活动管理"
+        }
+    },{
+        "menuId": 4,
+        "menuName": "系统管理",
+        "name": "system",
+        "icon": "system",
+        "permission": {
+            "path": "system",
+            "name": "系统管理"
+        },
+        "children": [
+            {
+                "menuId": 5,
+                "menuName": "用户管理",
+                "name": "user",
+                "path": "/user",
+                "permission": {
+                    "path": "system,user",
+                    "name": "用户管理"
+                }
+            },{
+                "menuId": 6,
+                "menuName": "角色管理",
+                "name": "role",
+                "path": "/role",
+                "permission": {
+                    "path": "system,role",
+                    "name": "角色管理"
+                }
+            }
+        ]
+    }
+]

@@ -14,13 +14,14 @@
 <script type="text/javascript">
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
+import menus from '../../../assets/data/menus.json'
 export default {
 	name: 'sideBar',
 	computed: {
 		...mapGetters([
-			'menus',
 			'sidebar'
 		]),
+		menus: () => menus,
 		isCollapse() {
 			return !this.sidebar.opened
 		}
