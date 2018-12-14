@@ -26,6 +26,11 @@ const router = new Router({
 					meta: { title: '商家管理' },
 					component: () => import ('../components/Merchant')
 				},{
+					path: '/savemerchant',
+					name: 'savemerchant',
+					meta: { title: '添加/编辑商家' },
+					component: () => import ('../components/Merchant/Save')
+				},{
 					path: '/activity',
 					name: 'activity',
 					meta: { title: '活动管理' },

@@ -2,22 +2,11 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>{{$route.query.id ? '编辑' : '添加'}}用户</span>
+				<span>{{$route.query.id ? '编辑' : '添加'}}商家</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px" :model="model" :rules="rules" ref="ruleForm">
-						<el-form-item label="头像" prop="avatar">
-							<el-upload
-								class="avatar-uploader"
-								action="https://jsonplaceholder.typicode.com/posts/"
-								:show-file-list="false"
-								:on-success="handleAvatarSuccess"
-								:before-upload="beforeAvatarUpload">
-								<img v-if="model.avatar" :src="model.avatar" class="avatar">
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
-						</el-form-item>
 						<el-form-item label="用户名" prop="userName">
 							<el-input v-model="model.userName"></el-input>
 						</el-form-item>

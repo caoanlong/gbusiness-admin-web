@@ -16,7 +16,7 @@
 				</el-form>
 			</div>
 			<div class="tableControl">
-				<el-button type="primary" size="mini" icon="el-icon-plus" @click="add">添加联盟商</el-button>
+				<el-button type="primary" size="mini" icon="el-icon-plus" @click="$router.push({name: 'savemerchant'})">添加联盟商</el-button>
 				<el-button type="danger" size="mini" icon="el-icon-delete" @click="del">批量删除</el-button>
 			</div>
 			<div class="table">
@@ -43,7 +43,7 @@
 					</el-table-column>
 					<el-table-column label="操作" width="230" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" type="warning" icon="el-icon-edit" @click="edit(scope.row.merchantId)">编辑</el-button>
+							<el-button size="mini" type="warning" icon="el-icon-edit" @click="$router.push({name: 'savemerchant', query: {id: scope.row.merchantId}})">编辑</el-button>
 							<el-button size="mini" type="danger" icon="el-icon-delete" @click="del(scope.row.merchantId)">删除</el-button>
 						</template>
 					</el-table-column>
@@ -100,9 +100,6 @@ export default {
 
         },
         search() {
-
-        },
-        add() {
 
         },
         edit() {

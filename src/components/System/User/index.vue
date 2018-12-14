@@ -37,7 +37,7 @@
 					</el-table-column>
 					<el-table-column label="操作" width="250" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" type="warning" icon="el-icon-edit" @click="$router.push({name: 'saveuser', query: {userId: scope.row.userId}})">编辑</el-button>
+							<el-button size="mini" type="warning" icon="el-icon-edit" @click="$router.push({name: 'saveuser', query: {id: scope.row.userId}})">编辑</el-button>
 							<el-button size="mini" type="danger" icon="el-icon-delete" @click="del(scope.row.userId)">删除</el-button>
 						</template>
 					</el-table-column>
