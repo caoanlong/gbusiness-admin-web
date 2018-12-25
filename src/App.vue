@@ -6,7 +6,12 @@
 
 <script>
 export default {
-	name: 'App'
+	name: 'App',
+	created() {
+		if (localStorage.getItem('token')) {
+			this.$store.dispatch('getUserInfo')
+		}
+	}
 }
 </script>
 

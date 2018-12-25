@@ -32,7 +32,9 @@
 					<el-table-column label="创建人" prop="createBy" width="100" align="center"></el-table-column>
 					<el-table-column label="创建日期" align="center" width="170">
 						<template slot-scope="scope">
-							<span v-if="scope.row.createTime">{{ scope.row.createTime | transDate('YYYY年MM月DD日 hh:mm:ss') }}</span>
+							<span v-if="scope.row.createTime">
+                                {{ scope.row.createTime | transDate('YYYY年MM月DD日 HH:mm:ss') }}
+                            </span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="250" align="center">
@@ -57,42 +59,35 @@
 </template>
 
 <script>
+import { mixin } from '../../../utils/mixin'
+import User from '../../../api/User'
 export default {
+    mixins: [mixin],
     data() {
         return {
-            total: 400,
-            pageIndex: 1,
-            pageSize: 100,
             find: {
                 userName: ''
-            },
-            list: [
-                {
-                    userId: 1,
-                    userName: 'admin',
-                    role: '超级管理员',
-                    createBy: '龙哥',
-                    createTime: new Date()
-                }
-            ],
-            selectedList: []
+            }
         }
+    },
+    created() {
+        this.getList()
     },
     methods: {
         reset() {
             this.find.userName = ''
         },
-        handleSizeChange() {
-
-        },
-        handleCurrentChange() {
-
-        },
         selectionChange() {
 
         },
-        search() {
-
+        getList() {
+            User.find({
+                pageIndex: this.pageIndex,
+                pageSize: this.pageSize
+            }).then(res => {
+                this.total = res.total
+                this.list = res.list
+            })
         },
         edit() {
 

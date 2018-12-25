@@ -56,41 +56,35 @@
 </template>
 
 <script>
+import { mixin } from '../../../utils/mixin'
+import Role from '../../../api/Role'
 export default {
+    mixins: [mixin],
     data() {
         return {
-            total: 400,
-            pageIndex: 1,
-            pageSize: 100,
             find: {
                 roleName: ''
-            },
-            list: [
-                {
-                    roleId: 1,
-                    roleName: '运营',
-                    createBy: '龙哥',
-                    createTime: new Date()
-                }
-            ],
-            selectedList: []
+            }
         }
+    },
+    created() {
+        this.getList()
     },
     methods: {
         reset() {
             this.find.roleName = ''
         },
-        handleSizeChange() {
-
-        },
-        handleCurrentChange() {
-
-        },
         selectionChange() {
 
         },
-        search() {
-
+        getList() {
+            Role.find({
+                pageIndex: this.pageIndex,
+                pageSize: this.pageSize
+            }).then(res => {
+                this.total = res.total
+                this.list = res.list
+            })
         },
         edit() {
 

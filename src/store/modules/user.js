@@ -1,4 +1,4 @@
-// import { login, logout, getUserInfo } from '../../api/login'
+import User from '../../api/User'
 
 const user = {
 	state: {
@@ -18,25 +18,14 @@ const user = {
 		}
 	},
 	actions: {
-		Login ({commit}, user) {
-			const userName = user.userName.trim()
-			const password = user.password.trim()
+		login ({commit}, token) {
 			return new Promise((resolve, reject) => {
-				// login(userName, password).then(response => {
-				// 	let data = response.data
-				// 	if (data.code == 200) {
-				// 		commit('SET_TOKEN', response.headers['authorization'])
-				// 		localStorage.setItem('token', response.headers['authorization'])
-				// 		resolve(data.data)
-				// 	} else {
-				// 		reject(data.msg)
-				// 	}
-				// }).catch(error => {
-				// 	reject(error)
-				// })
+				commit('SET_TOKEN', token)
+				localStorage.setItem('token', token)
+				resolve()
 			})
 		},
-		LogOut({ commit, state }) {
+		logOut({ commit, state }) {
 			return new Promise((resolve, reject) => {
 				commit('SET_USERNAME', '')
 				commit('SET_AVATAR', '')
@@ -46,18 +35,17 @@ const user = {
 				resolve()
 			})
 		},
-		GetUserInfo({ commit }) {
+		getUserInfo({ commit }) {
 			return new Promise((resolve, reject) => {
-				// getUserInfo().then(response => {
-				// 	const data = response.data
-				// 	commit('SET_USERNAME', data.data.userName)
-				// 	commit('SET_AVATAR', data.data.avatar)
-				// 	localStorage.setItem('userName', data.data.userName)
-				// 	localStorage.setItem('avatar', data.data.avatar)
-				// 	resolve(data)
-				// }).catch(error => {
-				// 	reject(error)
-				// })
+				User.findByToken().then(res => {
+					commit('SET_USERNAME', res.userName)
+					commit('SET_AVATAR', res.avatar)
+					localStorage.setItem('userName', res.userName)
+					localStorage.setItem('avatar', res.avatar)
+					resolve(res)
+				}).catch(err => {
+					reject(err)
+				})
 			})
 		}
 	}

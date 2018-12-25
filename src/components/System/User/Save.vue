@@ -9,11 +9,13 @@
 					<el-form label-width="120px" :model="model" :rules="rules" ref="ruleForm">
 						<el-form-item label="头像" prop="avatar">
 							<el-upload
-								class="avatar-uploader"
-								action="https://jsonplaceholder.typicode.com/posts/"
+								class="avatar-uploader" 
+								name="image"
+								:action="baseURL + '/file/imageUpload'"
 								:show-file-list="false"
 								:on-success="handleAvatarSuccess"
-								:before-upload="beforeAvatarUpload">
+								:before-upload="beforeAvatarUpload" 
+								:headers="uploadHeaders">
 								<img v-if="model.avatar" :src="model.avatar" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -21,8 +23,8 @@
 						<el-form-item label="用户名" prop="userName">
 							<el-input v-model="model.userName"></el-input>
 						</el-form-item>
-						<el-form-item label="密码" prop="password">
-							<el-input v-model="model.password"></el-input>
+						<el-form-item label="手机号" prop="mobile">
+							<el-input v-model="model.mobile"></el-input>
 						</el-form-item>
 						<el-form-item label="角色" prop="roleId">
 							<el-select v-model="model.roleId" placeholder="请选择" style="width:100%">
@@ -45,9 +47,12 @@
 	</div>
 </template>
 <script type="text/javascript">
+import User from '../../../api/User'
+import { baseURL } from '../../../utils/request'
 export default {
 	data() {
 		return {
+			uploadHeaders: {'Authorization': localStorage.getItem('token')},
 			roles: [
 				{
                     roleId: 1,
@@ -67,15 +72,23 @@ export default {
 				userName: [
 					{required: true, message: '请输入用户名'},
 					{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
-				],
-				password: [
-					{required: true, message: '请输入密码'},
-					{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
 				]
 			}
 		}
 	},
+	computed: {
+		baseURL: () => baseURL
+	},
+	created() {
+		this.getInfo()
+	},
 	methods: {
+		getInfo() {
+			const userId = this.$route.query.id
+			User.findById({ userId }).then(res => {
+				this.model = res
+			})
+		},
 		handleAvatarSuccess(res, file) {
 			this.model.avatar = URL.createObjectURL(file.raw)
 		},

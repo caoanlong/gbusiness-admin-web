@@ -45,8 +45,8 @@ export default {
 			this.$store.dispatch('toggleSideBar')
 		},
 		logout() {
-			this.$store.dispatch('LogOut').then(() => {
-				location.reload()
+			this.$store.dispatch('logOut').then(() => {
+				this.$router.push({name: 'login'})
 			})
 		}
 	},
