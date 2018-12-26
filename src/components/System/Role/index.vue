@@ -28,16 +28,37 @@
                     @selection-change="selectionChange">
 					<el-table-column type="selection" align="center" width="40"></el-table-column>
 					<el-table-column label="角色名称" prop="roleName"></el-table-column>
-					<el-table-column label="创建人" prop="createBy" width="100" align="center"></el-table-column>
+					<el-table-column label="创建人" prop="createName" width="100" align="center"></el-table-column>
+					<el-table-column label="修改人" prop="updateName" width="100" align="center"></el-table-column>
 					<el-table-column label="创建日期" align="center" width="170">
 						<template slot-scope="scope">
-							<span v-if="scope.row.createTime">{{ scope.row.createTime | transDate('YYYY年MM月DD日 hh:mm:ss') }}</span>
+							<span v-if="scope.row.createTime">
+                                {{ scope.row.createTime | transDate('YYYY年MM月DD日 HH:mm:ss') }}
+                            </span>
+						</template>
+					</el-table-column>
+                    <el-table-column label="修改日期" align="center" width="170">
+						<template slot-scope="scope">
+							<span v-if="scope.row.updateTime">
+                                {{ scope.row.updateTime | transDate('YYYY年MM月DD日 HH:mm:ss') }}
+                            </span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="250" align="center">
-						<template slot-scope="scope">
-							<el-button size="mini" type="warning" icon="el-icon-edit" @click="$router.push({name: 'saverole', query: {id: scope.row.roleId}})">编辑</el-button>
-							<el-button size="mini" type="danger" icon="el-icon-delete" @click="del(scope.row.roleId)">删除</el-button>
+						<template slot-scope="scope" v-if="scope.row.permissions != '*'">
+							<el-button size="mini" 
+                                type="warning" 
+                                icon="el-icon-edit" 
+                                @click="$router.push({name: 'saverole', query: {id: scope.row.roleId}})">
+                                编辑
+                            </el-button>
+							<el-button 
+                                size="mini" 
+                                type="danger" 
+                                icon="el-icon-delete" 
+                                @click="del(scope.row.roleId)">
+                                删除
+                            </el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -45,7 +66,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="pageIndex"
-                    :page-sizes="[100, 200, 300, 400]"
+                    :page-sizes="[10, 20, 30, 40]"
                     :page-size="pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total">
@@ -56,6 +77,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 import { mixin } from '../../../utils/mixin'
 import Role from '../../../api/Role'
 export default {
@@ -73,6 +95,7 @@ export default {
     methods: {
         reset() {
             this.find.roleName = ''
+            this.getList()
         },
         selectionChange() {
 
@@ -80,17 +103,18 @@ export default {
         getList() {
             Role.find({
                 pageIndex: this.pageIndex,
-                pageSize: this.pageSize
+                pageSize: this.pageSize,
+                roleName: this.find.roleName
             }).then(res => {
                 this.total = res.total
                 this.list = res.list
             })
         },
-        edit() {
-
-        },
-        del() {
-
+        del(roleId) {
+            Role.del({ roleId }).then(res => {
+                Message.success(res.data.msg)
+                this.getList()
+            })
         }
     }
 }

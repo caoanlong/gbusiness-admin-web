@@ -2,13 +2,13 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>{{$route.query.id ? '编辑' : '添加'}}角色</span>
+				<span>{{roleId ? '编辑' : '添加'}}角色</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
 					<el-form label-width="120px" :model="model" :rules="rules" ref="ruleForm">
 						<el-form-item label="角色名" prop="roleName">
-							<el-input v-model="model.userName"></el-input>
+							<el-input v-model="model.roleName"></el-input>
 						</el-form-item>
                         <el-form-item label="权限">
 							<el-select v-model="model.permissions" placeholder="请选择" style="width:100%" multiple>
@@ -32,12 +32,15 @@
 </template>
 <script type="text/javascript">
 import { Message } from 'element-ui'
+import Role from '../../../api/Role'
 import menus from '../../../assets/data/menus.json'
 export default {
 	data() {
 		return {
-            permissions: [],
+			permissions: [],
+			roleId: '',
 			model: {
+				roleId: '',
                 roleName: '',
                 permissions: []
 			},
@@ -50,12 +53,34 @@ export default {
 		}
     },
     created() {
-        this.menuPermissions(menus)
+		this.roleId = this.$route.query.id
+		this.roleId && this.getInfo()
+		this.menuPermissions(menus)
     },
 	methods: {
+		getInfo() {
+			Role.findById({ roleId: this.roleId }).then(res => {
+				this.$set(this.model, 'roleId', res.roleId)
+				this.$set(this.model, 'roleName', res.roleName)
+				this.$set(this.model, 'permissions', res.permissions.split(','))
+			})
+		},
 		save() {
 			this.$refs['ruleForm'].validate(valid => {
 				if (!valid) return
+				const data = Object.assign({}, this.model)
+				data.permissions = data.permissions.join(',')
+				if (this.roleId) {
+					Role.update(data).then(res => {
+						Message.success(res.data.msg)
+						this.$router.push({name: 'role'})
+					})
+				} else {
+					Role.add(data).then(res => {
+						Message.success(res.data.msg)
+						this.$router.push({name: 'role'})
+					})
+				}
 			})
 		},
 		menuPermissions(list) {

@@ -2,7 +2,7 @@
 	<div class="main-content">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span>{{$route.query.id ? '编辑' : '添加'}}用户</span>
+				<span>{{userId ? '编辑' : '添加'}}用户</span>
 			</div>
 			<el-row>
 				<el-col :span="14" :offset="5">
@@ -15,7 +15,9 @@
 								:show-file-list="false"
 								:on-success="handleAvatarSuccess"
 								:before-upload="beforeAvatarUpload" 
-								:headers="uploadHeaders">
+								:headers="uploadHeaders" 
+								:onError="uploadError" 
+								:onSuccess="uploadSuccess">
 								<img v-if="model.avatar" :src="model.avatar" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -25,6 +27,9 @@
 						</el-form-item>
 						<el-form-item label="手机号" prop="mobile">
 							<el-input v-model="model.mobile"></el-input>
+						</el-form-item>
+						<el-form-item label="密码" prop="password" v-if="!userId">
+							<el-input v-model="model.password"></el-input>
 						</el-form-item>
 						<el-form-item label="角色" prop="roleId">
 							<el-select v-model="model.roleId" placeholder="请选择" style="width:100%">
@@ -47,31 +52,32 @@
 	</div>
 </template>
 <script type="text/javascript">
-import User from '../../../api/User'
+import { Message } from 'element-ui'
 import { baseURL } from '../../../utils/request'
+import User from '../../../api/User'
+import Role from '../../../api/Role'
 export default {
 	data() {
 		return {
 			uploadHeaders: {'Authorization': localStorage.getItem('token')},
-			roles: [
-				{
-                    roleId: 1,
-                    roleName: '超级管理员'
-                },{
-                    roleId: 2,
-                    roleName: '运营管理员'
-                }
-			],
+			roles: [],
+			userId: '',
 			model: {
+				userId: '',
 				avatar: '',
 				userName: '',
 				mobile: '',
+				password: '',
 				roleId: ''
 			},
 			rules: {
 				userName: [
 					{required: true, message: '请输入用户名'},
 					{min: 2, max: 200, message: '长度在 2 到 200 个字符'}
+				],
+				password: [
+					{required: true, message: '请输入密码'},
+					{min: 2, max: 200, message: '长度在 6 到 20 个字符'}
 				]
 			}
 		}
@@ -80,12 +86,18 @@ export default {
 		baseURL: () => baseURL
 	},
 	created() {
-		this.getInfo()
+		this.userId = this.$route.query.id
+		this.getRoles()
+		this.userId && this.getInfo()
 	},
 	methods: {
+		getRoles() {
+			Role.findAll().then(res => {
+				this.roles = res
+			})
+		},
 		getInfo() {
-			const userId = this.$route.query.id
-			User.findById({ userId }).then(res => {
+			User.findById({ userId: this.userId }).then(res => {
 				this.model = res
 			})
 		},
@@ -96,16 +108,39 @@ export default {
 			const isJPG = file.type === 'image/jpeg'
 			const isLt2M = file.size / 1024 / 1024 < 2
 			if (!isJPG) {
-				this.$message.error('上传头像图片只能是 JPG 格式!')
+				Message.error('上传头像图片只能是 JPG 格式!')
 			}
 			if (!isLt2M) {
-				this.$message.error('上传头像图片大小不能超过 2MB!')
+				Message.error('上传头像图片大小不能超过 2MB!')
 			}
 			return isJPG && isLt2M
+		},
+		// 上传成功
+		uploadSuccess(res) {
+			if (res.code == 200) {
+				Message.success(res.msg)
+				this.model.avatar = res.data
+			} else{
+				Message.error(res.msg)
+			}
+		},
+		uploadError(res) {
+			console.log(res)
 		},
 		save() {
 			this.$refs['ruleForm'].validate(valid => {
 				if (!valid) return
+				if (this.userId) {
+					User.update(this.model).then(res => {
+						Message.success(res.data.msg)
+						this.$router.push({name: 'user'})
+					})
+				} else {
+					User.add(this.model).then(res => {
+						Message.success(res.data.msg)
+						this.$router.push({name: 'user'})
+					})
+				}
 			})
 		},
 		back() {

@@ -28,12 +28,20 @@
                     @selection-change="selectionChange">
 					<el-table-column type="selection" align="center" width="40"></el-table-column>
 					<el-table-column label="用户名" prop="userName"></el-table-column>
-					<el-table-column label="角色" prop="role"></el-table-column>
-					<el-table-column label="创建人" prop="createBy" width="100" align="center"></el-table-column>
+					<el-table-column label="角色" prop="roleName"></el-table-column>
+					<el-table-column label="创建人" prop="createName" width="100" align="center"></el-table-column>
+					<el-table-column label="修改人" prop="updateName" width="100" align="center"></el-table-column>
 					<el-table-column label="创建日期" align="center" width="170">
 						<template slot-scope="scope">
 							<span v-if="scope.row.createTime">
                                 {{ scope.row.createTime | transDate('YYYY年MM月DD日 HH:mm:ss') }}
+                            </span>
+						</template>
+					</el-table-column>
+                    <el-table-column label="修改日期" align="center" width="170">
+						<template slot-scope="scope">
+							<span v-if="scope.row.updateTime">
+                                {{ scope.row.updateTime | transDate('YYYY年MM月DD日 HH:mm:ss') }}
                             </span>
 						</template>
 					</el-table-column>
@@ -59,6 +67,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 import { mixin } from '../../../utils/mixin'
 import User from '../../../api/User'
 export default {
@@ -83,17 +92,18 @@ export default {
         getList() {
             User.find({
                 pageIndex: this.pageIndex,
-                pageSize: this.pageSize
+                pageSize: this.pageSize,
+                userName: this.find.userName
             }).then(res => {
                 this.total = res.total
                 this.list = res.list
             })
         },
-        edit() {
-
-        },
-        del() {
-
+        del(userId) {
+            User.del({ userId }).then(res => {
+                Message.success(res.data.msg)
+                this.getList()
+            })
         }
     }
 }

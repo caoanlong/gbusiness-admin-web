@@ -10,16 +10,6 @@
             "name": "首页"
         }
     },{
-        "menuId": 2,
-        "menuName": "商家管理",
-        "name": "merchant",
-        "path": "/merchant",
-        "icon": "peoples",
-        "permission": {
-            "path": "merchant",
-            "name": "商家管理"
-        }
-    },{
         "menuId": 3,
         "menuName": "活动管理",
         "name": "activity",
@@ -29,6 +19,36 @@
             "path": "activity",
             "name": "活动管理"
         }
+    },{
+        "menuId": 2,
+        "menuName": "商家管理",
+        "name": "merchant",
+        "icon": "peoples",
+        "permission": {
+            "path": "merchant",
+            "name": "商家管理"
+        },
+        "children": [
+            {
+                "menuId": 7,
+                "menuName": "商家列表",
+                "name": "merchants",
+                "path": "/merchants",
+                "permission": {
+                    "path": "merchant|merchants",
+                    "name": "商家列表"
+                }
+            },{
+                "menuId": 8,
+                "menuName": "商家报名表",
+                "name": "merchantmember",
+                "path": "/merchantmember",
+                "permission": {
+                    "path": "merchant|merchantmember",
+                    "name": "商家报名表"
+                }
+            }
+        ]
     },{
         "menuId": 4,
         "menuName": "系统管理",
@@ -45,7 +65,7 @@
                 "name": "user",
                 "path": "/user",
                 "permission": {
-                    "path": "system,user",
+                    "path": "system|user",
                     "name": "用户管理"
                 }
             },{
@@ -54,7 +74,7 @@
                 "name": "role",
                 "path": "/role",
                 "permission": {
-                    "path": "system,role",
+                    "path": "system|role",
                     "name": "角色管理"
                 }
             }
