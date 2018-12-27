@@ -17,19 +17,16 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="primary" size="mini" icon="el-icon-plus" @click="$router.push({name: 'saverole'})">添加角色</el-button>
-				<el-button type="danger" size="mini" icon="el-icon-delete" @click="del">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table 
                     :data="list" 
                     border 
                     style="width: 100%" 
-                    size="mini" 
-                    @selection-change="selectionChange">
-					<el-table-column type="selection" align="center" width="40"></el-table-column>
+                    size="mini">
 					<el-table-column label="角色名称" prop="roleName"></el-table-column>
-					<el-table-column label="创建人" prop="createName" width="100" align="center"></el-table-column>
-					<el-table-column label="修改人" prop="updateName" width="100" align="center"></el-table-column>
+					<el-table-column label="创建人" prop="createUserName" width="100" align="center"></el-table-column>
+					<el-table-column label="修改人" prop="updateUserName" width="100" align="center"></el-table-column>
 					<el-table-column label="创建日期" align="center" width="170">
 						<template slot-scope="scope">
 							<span v-if="scope.row.createTime">
@@ -96,9 +93,6 @@ export default {
         reset() {
             this.find.roleName = ''
             this.getList()
-        },
-        selectionChange() {
-
         },
         getList() {
             Role.find({

@@ -18,6 +18,8 @@ import './assets/icons'
 
 Vue.config.productionTip = false
 
+Vue.prototype.IMGURL = process.env.IMG_API
+
 Vue.use(Element)
 
 // global filters

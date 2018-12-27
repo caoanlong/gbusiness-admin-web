@@ -17,20 +17,17 @@
 			</div>
 			<div class="tableControl">
 				<el-button type="primary" size="mini" icon="el-icon-plus" @click="$router.push({name: 'saveuser'})">添加用户</el-button>
-				<el-button type="danger" size="mini" icon="el-icon-delete" @click="del">批量删除</el-button>
 			</div>
 			<div class="table">
 				<el-table 
                     :data="list" 
                     border 
                     style="width: 100%" 
-                    size="mini" 
-                    @selection-change="selectionChange">
-					<el-table-column type="selection" align="center" width="40"></el-table-column>
+                    size="mini">
 					<el-table-column label="用户名" prop="userName"></el-table-column>
 					<el-table-column label="角色" prop="roleName"></el-table-column>
-					<el-table-column label="创建人" prop="createName" width="100" align="center"></el-table-column>
-					<el-table-column label="修改人" prop="updateName" width="100" align="center"></el-table-column>
+					<el-table-column label="创建人" prop="createUserName" width="100" align="center"></el-table-column>
+					<el-table-column label="修改人" prop="updateUserName" width="100" align="center"></el-table-column>
 					<el-table-column label="创建日期" align="center" width="170">
 						<template slot-scope="scope">
 							<span v-if="scope.row.createTime">
@@ -56,7 +53,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="pageIndex"
-                    :page-sizes="[100, 200, 300, 400]"
+                    :page-sizes="[10, 20, 30, 40]"
                     :page-size="pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total">
@@ -85,9 +82,7 @@ export default {
     methods: {
         reset() {
             this.find.userName = ''
-        },
-        selectionChange() {
-
+            this.getList()
         },
         getList() {
             User.find({

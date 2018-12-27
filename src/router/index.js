@@ -23,15 +23,20 @@ const router = new Router({
 					meta: { title: '首页' },
 					component: () => import ('../components/Home')
 				},{
-					path: '/merchant',
-					name: 'merchant',
-					meta: { title: '商家管理' },
-					component: () => import ('../components/Merchant')
+					path: '/merchants',
+					name: 'merchants',
+					meta: { title: '商家列表' },
+					component: () => import ('../components/Merchant/Merchants')
 				},{
 					path: '/savemerchant',
 					name: 'savemerchant',
 					meta: { title: '添加/编辑商家' },
-					component: () => import ('../components/Merchant/Save')
+					component: () => import ('../components/Merchant/Merchants/Save')
+				},{
+					path: '/merchantmember',
+					name: 'merchantmember',
+					meta: { title: '商家报名表' },
+					component: () => import ('../components/Merchant/MerchantMember')
 				},{
 					path: '/activity',
 					name: 'activity',
