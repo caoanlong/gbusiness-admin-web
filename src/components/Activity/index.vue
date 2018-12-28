@@ -30,12 +30,10 @@
                     border 
                     style="width: 100%" 
                     size="mini">
-					<el-table-column label="商家名称" prop="merchantName"></el-table-column>
-					<el-table-column label="推广/人" prop="promotionCount" width="80"></el-table-column>
-					<el-table-column label="购买/单" prop="sellCount" width="80"></el-table-column>
-					<el-table-column label="链接" prop="link">
+					<el-table-column label="活动名称" prop="name"></el-table-column>
+					<el-table-column label="价格" prop="price">
                         <template slot-scope="scope">
-                            <a :href="scope.row.link">链接</a>
+                            {{scope.row.price}}元
                         </template>
                     </el-table-column>
 					<el-table-column label="创建人" prop="createUserName" width="100" align="center"></el-table-column>
@@ -60,7 +58,7 @@
                                 size="mini" 
                                 type="warning" 
                                 icon="el-icon-edit" 
-                                @click="$router.push({name: 'savemerchant', query: {id: scope.row.merchantId}})">
+                                @click="$router.push({name: 'saveactivity', query: {id: scope.row.activityId}})">
                                 编辑
                             </el-button>
 						</template>

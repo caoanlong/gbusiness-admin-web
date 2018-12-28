@@ -43,6 +43,11 @@ const router = new Router({
 					meta: { title: '活动管理' },
 					component: () => import ('../components/Activity')
 				},{
+					path: '/saveactivity',
+					name: 'saveactivity',
+					meta: { title: '添加/编辑活动' },
+					component: () => import ('../components/Activity/Save')
+				},{
 					path: '/user',
 					name: 'user',
 					meta: { title: '用户管理' },
