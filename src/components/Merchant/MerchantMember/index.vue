@@ -27,7 +27,8 @@
                     :data="list" 
                     border 
                     style="width: 100%" 
-                    size="mini">
+                    size="mini" 
+                    v-loading="loading">
 					<el-table-column label="商家报名人" prop="merchantMemberName"></el-table-column>
 					<el-table-column label="行业" prop="industry"></el-table-column>
 					<el-table-column label="是否已添加商家">
@@ -67,7 +68,8 @@ export default {
             find: {
                 merchantMemberName: '',
                 isAddMerchant: ''
-            }
+            },
+            loading: true
         }
     },
     created() {
@@ -86,6 +88,7 @@ export default {
                 merchantMemberName: this.find.merchantMemberName,
                 isAddMerchant: this.find.isAddMerchant
             }).then(res => {
+                this.loading = false
                 this.total = res.total
                 this.list = res.list
             })

@@ -17,7 +17,7 @@
 								:headers="uploadHeaders" 
 								:onError="uploadError" 
 								:onSuccess="uploadSuccess">
-								<img v-if="model.banner" :src="model.banner" class="avatar">
+								<img v-if="model.banner" :src="IMGURL + model.banner" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>
@@ -29,8 +29,8 @@
                                 <template slot="append">元</template>
                             </el-input>
 						</el-form-item>
-                        <el-form-item label="活动商家" prop="merchants">
-							<el-select v-model="model.merchants" placeholder="请选择" style="width:100%" multiple>
+                        <el-form-item label="活动商家" prop="merchantIds">
+							<el-select v-model="model.merchantIds" placeholder="请选择" style="width:100%" multiple>
 								<el-option 
 									v-for="item in merchants" 
 									:key="item.merchantId" 
@@ -80,7 +80,7 @@ export default {
 				name: '',
 				banner: '',
                 price: '',
-                merchants: [],
+                merchantIds: [],
 				notes: '',
 				introduction: '',
 				endTime: ''
@@ -88,7 +88,7 @@ export default {
 			rules: {
 				banner: [{required: true, message: '请上传大图'}],
 				name: [{required: true, message: '请输入活动名称'}],
-				merchants: [{required: true, message: '请选择活动商家'}],
+				merchantIds: [{required: true, message: '请选择活动商家'}],
 				notes: [{required: true, message: '请输入购买须知'}],
 				introduction: [{required: true, message: '请输入活动介绍'}],
 				price: [
@@ -118,7 +118,19 @@ export default {
         },
 		getInfo() {
 			Activity.findById({ activityId: this.activityId }).then(res => {
-				this.model = res
+				this.model = {
+					activityId: res.activityId,
+					name: res.name,
+					banner: res.banner,
+					price: res.price,
+					merchantIds: res.merchants.map(item => item.merchantId),
+					notes: res.notes,
+					introduction: res.introduction,
+					endTime: res.endTime
+				}
+				this.$nextTick(() => {
+					CKEDITOR.instances.editor.setData(this.model.notes)
+				})
 			})
 		},
 		handleImageSuccess(res, file) {
@@ -160,25 +172,29 @@ export default {
 }
 </script>
 <style lang="stylus">
-.avatar-uploader .el-upload
-	border 1px dashed #d9d9d9
-	border-radius 6px
-	cursor pointer
-	position relative
-	overflow hidden
-.avatar-uploader .el-upload:hover
-	border-color #409EFF
-.avatar-uploader-icon
-	font-size 28px
-	color #8c939d
-	min-width 300px
-	max-width 500px
-	min-height 200px
-	line-height 200px
-	text-align center
-.avatar
-	min-width 100px
-    max-width 500px
-	min-height 200px
-	display block
+.avatar-uploader .el-upload {
+	border: 1px dashed #d9d9d9;
+	border-radius: 6px;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+	border-color: #409EFF;
+}
+.avatar-uploader-icon {
+	font-size: 28px;
+	color: #8c939d;
+	min-width: 300px;
+	max-width: 500px;
+	min-height: 200px;
+	line-height: 200px;
+	text-align: center;
+}
+.avatar {
+	min-width: 100px;
+    max-width: 500px;
+	min-height: 200px;
+	display: block;
+}
 </style>

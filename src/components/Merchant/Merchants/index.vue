@@ -24,13 +24,13 @@
                     border 
                     style="width: 100%" 
                     size="mini" 
-                    @selection-change="selectionChange">
+                    v-loading="loading">
 					<el-table-column label="商家名称" prop="merchantName"></el-table-column>
 					<el-table-column label="推广/人" prop="promotionCount" width="80"></el-table-column>
 					<el-table-column label="购买/单" prop="sellCount" width="80"></el-table-column>
 					<el-table-column label="链接" prop="link">
                         <template slot-scope="scope">
-                            <a :href="scope.row.link">链接</a>
+                            <el-button type="text" @click="showLinks(scope.row.merchantId)">链接</el-button>
                         </template>
                     </el-table-column>
 					<el-table-column label="创建人" prop="createUserName" width="100" align="center"></el-table-column>
@@ -49,7 +49,7 @@
                             </span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="150" align="center">
+					<el-table-column label="操作" width="250" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button 
                                 size="mini" 
@@ -57,6 +57,13 @@
                                 icon="el-icon-edit" 
                                 @click="$router.push({name: 'savemerchant', query: {id: scope.row.merchantId}})">
                                 编辑
+                            </el-button>
+                            <el-button 
+                                size="mini" 
+                                type="danger" 
+                                icon="el-icon-delete" 
+                                @click="del(scope.row.merchantId)">
+                                删除
                             </el-button>
 						</template>
 					</el-table-column>
@@ -72,6 +79,7 @@
                 </el-pagination>
 			</div>
 		</el-card>
+        <links :isVisible="isLinksVisible" :merchantId="currentMerchantId" @on-close="isLinksVisible = false"></links>
     </div>
 </template>
 
@@ -79,13 +87,18 @@
 import { Message } from 'element-ui'
 import { mixin } from '../../../utils/mixin'
 import Merchant from '../../../api/Merchant'
+import Links from './components/Links'
 export default {
     mixins: [mixin],
+    components: { Links },
     data() {
         return {
+            loading: true,
             find: {
                 merchantName: ''
-            }
+            },
+            isLinksVisible: false,
+            currentMerchantId: ''
         }
     },
     created() {
@@ -95,10 +108,6 @@ export default {
         reset() {
             this.find.merchantName = ''
             this.getList()
-
-        },
-        selectionChange() {
-
         },
         getList() {
             Merchant.find({
@@ -106,12 +115,20 @@ export default {
                 pageSize: this.pageSize,
                 merchantName: this.find.merchantName
             }).then(res => {
+                this.loading = false
                 this.total = res.total
                 this.list = res.list
             })
         },
-        del() {
-
+        showLinks(merchantId) {
+            this.isLinksVisible = true
+            this.currentMerchantId = merchantId
+        },
+        del(merchantId) {
+            Merchant.del({ merchantId }).then(res => {
+                Message.success(res.data.msg)
+                this.getList()
+            })
         }
     }
 }

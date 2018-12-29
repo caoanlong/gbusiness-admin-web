@@ -23,7 +23,8 @@
                     :data="list" 
                     border 
                     style="width: 100%" 
-                    size="mini">
+                    size="mini" 
+                    v-loading="loading">
 					<el-table-column label="用户名" prop="userName"></el-table-column>
 					<el-table-column label="角色" prop="roleName"></el-table-column>
 					<el-table-column label="创建人" prop="createUserName" width="100" align="center"></el-table-column>
@@ -42,10 +43,22 @@
                             </span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="250" align="center">
-						<template slot-scope="scope">
-							<el-button size="mini" type="warning" icon="el-icon-edit" @click="$router.push({name: 'saveuser', query: {id: scope.row.userId}})">编辑</el-button>
-							<el-button size="mini" type="danger" icon="el-icon-delete" @click="del(scope.row.userId)">删除</el-button>
+					<el-table-column label="操作" width="250" align="center" fixed="right">
+						<template slot-scope="scope" v-if="scope.row.userId != 1">
+							<el-button 
+                                size="mini" 
+                                type="warning" 
+                                icon="el-icon-edit" 
+                                @click="$router.push({name: 'saveuser', query: {id: scope.row.userId}})">
+                                编辑
+                            </el-button>
+							<el-button 
+                                size="mini" 
+                                type="danger" 
+                                icon="el-icon-delete" 
+                                @click="del(scope.row.userId)">
+                                删除
+                            </el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -73,7 +86,8 @@ export default {
         return {
             find: {
                 userName: ''
-            }
+            },
+            loading: true
         }
     },
     created() {
@@ -90,6 +104,7 @@ export default {
                 pageSize: this.pageSize,
                 userName: this.find.userName
             }).then(res => {
+                this.loading = false
                 this.total = res.total
                 this.list = res.list
             })

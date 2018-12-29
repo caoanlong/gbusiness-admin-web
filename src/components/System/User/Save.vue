@@ -18,7 +18,7 @@
 								:headers="uploadHeaders" 
 								:onError="uploadError" 
 								:onSuccess="uploadSuccess">
-								<img v-if="model.avatar" :src="model.avatar" class="avatar">
+								<img v-if="model.avatar" :src="IMGURL + model.avatar" class="avatar">
 								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</el-form-item>

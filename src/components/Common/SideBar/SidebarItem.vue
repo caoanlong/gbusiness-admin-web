@@ -14,7 +14,7 @@
 					<svg-icon v-if="item.icon" :icon-class="item.icon"></svg-icon>
 					<span slot="title">{{item.menuName}}</span>
 				</template>
-				<template v-for="child in item.children">
+				<template v-for="child in item.children" v-if="item.children">
 					<el-menu-item 
 						:index="child.name" 
 						:key="child.name"  

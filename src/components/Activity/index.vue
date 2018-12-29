@@ -29,13 +29,21 @@
                     :data="list" 
                     border 
                     style="width: 100%" 
-                    size="mini">
+                    size="mini" 
+                    v-loading="loading">
 					<el-table-column label="活动名称" prop="name"></el-table-column>
-					<el-table-column label="价格" prop="price">
+					<el-table-column label="价格" prop="price" width="100">
                         <template slot-scope="scope">
                             {{scope.row.price}}元
                         </template>
                     </el-table-column>
+                    <el-table-column label="截止时间" align="center" width="170">
+						<template slot-scope="scope">
+							<span v-if="scope.row.endTime">
+                                {{ scope.row.endTime | transDate('YYYY年MM月DD日 HH:mm:ss') }}
+                            </span>
+						</template>
+					</el-table-column>
 					<el-table-column label="创建人" prop="createUserName" width="100" align="center"></el-table-column>
                     <el-table-column label="修改人" prop="updateUserName" width="100" align="center"></el-table-column>
 					<el-table-column label="创建日期" align="center" width="170">
@@ -52,7 +60,7 @@
                             </span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="150" align="center">
+					<el-table-column label="操作" width="250" align="center" fixed="right">
 						<template slot-scope="scope">
 							<el-button 
                                 size="mini" 
@@ -60,6 +68,13 @@
                                 icon="el-icon-edit" 
                                 @click="$router.push({name: 'saveactivity', query: {id: scope.row.activityId}})">
                                 编辑
+                            </el-button>
+                            <el-button 
+                                size="mini" 
+                                type="danger" 
+                                icon="el-icon-delete" 
+                                @click="del(scope.row.activityId)">
+                                删除
                             </el-button>
 						</template>
 					</el-table-column>
@@ -88,7 +103,8 @@ export default {
         return {
             find: {
                 activityName: ''
-            }
+            },
+            loading: true
         }
     },
     created() {
@@ -106,8 +122,15 @@ export default {
                 pageSize: this.pageSize,
                 activityName: this.find.activityName
             }).then(res => {
+                this.loading = false
                 this.total = res.total
                 this.list = res.list
+            })
+        },
+        del(activityId) {
+            Activity.del({ activityId }).then(res => {
+                Message.success(res.data.msg)
+                this.getList()
             })
         }
     }

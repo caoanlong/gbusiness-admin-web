@@ -23,7 +23,8 @@
                     :data="list" 
                     border 
                     style="width: 100%" 
-                    size="mini">
+                    size="mini" 
+                    v-loading="loading">
 					<el-table-column label="角色名称" prop="roleName"></el-table-column>
 					<el-table-column label="创建人" prop="createUserName" width="100" align="center"></el-table-column>
 					<el-table-column label="修改人" prop="updateUserName" width="100" align="center"></el-table-column>
@@ -41,7 +42,7 @@
                             </span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="250" align="center">
+					<el-table-column label="操作" width="250" align="center" fixed="right">
 						<template slot-scope="scope" v-if="scope.row.permissions != '*'">
 							<el-button size="mini" 
                                 type="warning" 
@@ -83,7 +84,8 @@ export default {
         return {
             find: {
                 roleName: ''
-            }
+            },
+            loading: true
         }
     },
     created() {
@@ -100,6 +102,7 @@ export default {
                 pageSize: this.pageSize,
                 roleName: this.find.roleName
             }).then(res => {
+                this.loading = false
                 this.total = res.total
                 this.list = res.list
             })
