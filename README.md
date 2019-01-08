@@ -1,4 +1,4 @@
-# edu-web-frontend-boss
+# gbusiness-admin-web
 
 > A Vue.js project
 
