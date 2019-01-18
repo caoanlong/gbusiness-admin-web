@@ -33,7 +33,9 @@ export default {
 		}
 	},
 	created() {
-		this.walkMenus(menus)
+		if (this.permissions != '*') {
+			this.walkMenus(menus)
+		}
 		this.permissionMenus = menus
 	},
 	methods: {

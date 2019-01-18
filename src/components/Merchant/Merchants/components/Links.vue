@@ -13,7 +13,18 @@
                 v-for="item in activities" 
                 :key="item.activityId">
                 <span>{{item.name}}</span>
-                <span style="margin-left:10px;color:#409EFF">{{item.price}}元</span>
+                <span style="margin-left:10px;color:#ff6900">{{item.price}}元</span>
+                <a 
+                    :href="'http://m.gbusiness.cn/#/?activityId='+item.activityId" 
+                    style="margin-left:20px;color:#409EFF" :id="'link' + item.activityId">
+                    http://m.gbusiness.cn/#/?activityId={{item.activityId}}
+                </a>
+                <el-button 
+                    style="margin-left:10px;" 
+                    class="linkBtn" 
+                    :data-clipboard-target="'#link' + item.activityId">
+                    复制链接
+                </el-button>
             </el-card>
             <div v-if="activities.length == 0" style="text-align:center">暂无活动</div>
             <span slot="footer" class="dialog-footer">
@@ -23,6 +34,8 @@
     </div>
 </template>
 <script>
+import { Message } from 'element-ui'
+import ClipboardJS from 'clipboard'
 import Merchant from '../../../../api/Merchant'
 export default {
     props: {
@@ -42,6 +55,13 @@ export default {
             activities: [],
             loading: true
         }
+    },
+    mounted() {
+        const linkClipboard = new ClipboardJS('.linkBtn')
+        linkClipboard.on('success', function(e) {
+            Message.success('已复制到剪贴板！')
+            e.clearSelection()
+        })
     },
     methods: {
         getActivies(merchantId) {
